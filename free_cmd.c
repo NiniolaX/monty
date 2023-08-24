@@ -5,16 +5,19 @@
  * free_cmd - Frees command array
  * Return: Void
  */
-void free_cmd(char **cmd)
+void free_cmd(void)
 {
 	int i = 0;
 
-	while (cmd[i])
+	if (global.cmd == NULL)
+		return;
+
+	while ((global.cmd)[i] != NULL)
 	{
-		free(cmd[i]);
-		cmd[i] = NULL;
+		free((global.cmd)[i]);
+		(global.cmd)[i] = NULL;
 		i++;
 	}
-	free(cmd);
-	cmd = NULL;
+	free(global.cmd);
+	global.cmd = NULL;
 }

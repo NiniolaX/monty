@@ -1,43 +1,14 @@
 #include <stdlib.h>
 #include <stdio.h>
-#include "monty.h"
 #include <string.h>
+#include "monty.h"
 
-/**
- * read_file - Tokenies ByteCode instruction line
- * @line: ByteCode instruction line
- * Return: Array of instruction strings on success, NULL on fail
- */
-char **tokenize_line(char *line)
-{
-	char *delim = " ";
-	char *token;
-	char **cmdarray;
-	unsigned int i;
-
-	cmdarray = malloc(sizeof(char *) * 3);
-	if (cmdarray == NULL)
-	{
-		fprintf(stderr, "Error: malloc failed\n");
-		exit(EXIT_FAILURE);
-	}
-
-	/* Extract bytecode instruction from line */
-	token = strtok(line, delim);
-	for (i = 0; token != NULL && i < 2; i++)
-	{
-		cmdarray[i] = strdup(token);
-		if (cmdarray[i] == NULL)
-		{
-			fprintf(stderr, "Error: malloc failed\n");
-			exit(EXIT_FAILURE);
-		}
-		token = strtok(NULL, delim);
-	}
-	cmdarray[i++] = NULL;
-
-	return (cmdarray);
-}
+void cleanup(void);
+void tokenize_line(char *line);
+global_t global = {
+	NULL,
+	NULL,
+};
 
 /**
  * main - Entry point of monty program
@@ -47,12 +18,18 @@ char **tokenize_line(char *line)
  */
 int main(int argc, char **argv)
 {
-	stack_t *stack;
+	stack_t *stack = NULL;
 	FILE *file;
-	char *line;
-	size_t linesize = 0;
-	unsigned int linenumber = 1;
-	char **cmd = NULL;
+	char line[200], linecp[200];
+	unsigned int linenumber = 1, i, status;
+
+	/* Define opcode functions */
+	instruction_t instruction[] = {
+		{"push", push},
+		{"pall", pall},
+		{NULL, NULL},
+	};
+	atexit(cleanup);
 
 	/* Check number of arguments to program */
 	if (argc != 2)
@@ -68,40 +45,74 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
-	/* Define stack */
-	stack = malloc(sizeof(stack_t));
-	if (stack == NULL)
+
+	/* Initiate Monty program */
+	while (fgets(line, sizeof(line), file) != NULL)
+	{
+		strcpy(linecp, line);
+		tokenize_line(linecp);
+		status = 0;
+		/* Perform operation */
+		for (i = 0; instruction[i].opcode != NULL; i++)
+		{
+			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
+			{
+				instruction[i].f(&stack, linenumber);
+				/* printf("%s\n", instruction[i].opcode); */
+				status = 1;
+				break;
+			}
+		}
+		if (status != 1)
+		{
+			fprintf(stderr, "L%u: unknown instruction %s\n", linenumber, (global.cmd)[0]);
+			exit(EXIT_FAILURE);
+		}
+		linenumber++;
+		free_cmd();
+	}
+	fclose(file);
+
+	return (0);
+}
+
+/**
+ * tokenize_line - Tokenizes ByteCode instruction line
+ * @line: ByteCode instruction line
+ * Return: Void
+ */
+void tokenize_line(char *line)
+{
+	char *token = NULL, *delim = " \n";
+	unsigned int i;
+
+	global.cmd = malloc(sizeof(char *) * 3);
+	if (global.cmd == NULL)
 	{
 		fprintf(stderr, "Error: malloc failed\n");
 		exit(EXIT_FAILURE);
 	}
 
-	/* Initiate Monty program */
-	while (getline(&line, &linesize, file) != -1)
+	/* Extract bytecode instruction from line */
+	token = strtok(line, delim);
+	for (i = 0; token != NULL && i < 2; i++)
 	{
-		cmd = tokenize_line(line);
-		/* Perform operation */
-		if (strcmp(cmd[0], "push") == 0)
+		(global.cmd)[i] = _strdup(token);
+		if ((global.cmd)[i] == NULL)
 		{
-			printf("%s\n", cmd[0]);
-			/* push(&stack, linenumber); */
-		}
-		else if (strcmp(cmd[0], "pall") == 0)
-		{
-			printf("%s\n", cmd[0]);
-			/* pall(&stack, linenumber); */
-		}
-		else
-		{
-			fprintf(stderr, "L%u: unknown instruction %s\n", linenumber, cmd[0]);
+			fprintf(stderr, "Error: malloc failed\n");
 			exit(EXIT_FAILURE);
 		}
-		free_cmd(cmd);
-		linenumber++;
+		token = strtok(NULL, delim);
 	}
+	(global.cmd)[i++] = NULL;
+}
 
-	free(line);
-	fclose(file);
-
-	return (0);
+/**
+ * cleanup - Free all allocated memory before exit from program
+ * Return: Void
+ */
+void cleanup(void)
+{
+	free_cmd();
 }

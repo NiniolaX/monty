@@ -31,11 +31,23 @@ typedef struct instruction_s
         void (*f)(stack_t **stack, unsigned int line_number);
 } instruction_t;
 
-/* Global variable */
-extern char **instruction;
+/**
+ * struct global_s - program global variables
+ * @cmd: bytecode commands
+ * @line: command line from file
+ * @head: head of stack
+ *
+ * Description: Global variables to be used in
+ * program
+ */
+typedef struct global_s
+{
+	char **cmd;
+	stack_t *head;
+} global_t;
 
-void free_cmd(char **cmd);
-char **tokenize_line(char *line);
+extern global_t global;
+
 void push(stack_t **stack, unsigned int line_number);
 void pall(stack_t **stack, unsigned int line_number);
 void pint(stack_t **stack, unsigned int line_number);
@@ -43,5 +55,9 @@ void pop(stack_t **stack, unsigned int line_number);
 void swap(stack_t **stack, unsigned int line_number);
 void add(stack_t **stack, unsigned int line_number);
 void nop(stack_t **stack, unsigned int line_number);
+void cleanup(void);
+void free_cmd(void);
+void tokenize_line(char *line);
+char *_strdup(char *str);
 
 #endif
