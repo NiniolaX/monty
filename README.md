@@ -1,3 +1,3 @@
 #MONTY
 
-Simple implementation of the Monty interpreter.
+Simple interpreter for Monty bytecodes.
