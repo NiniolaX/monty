@@ -8,6 +8,7 @@ void tokenize_line(char *line);
 global_t global = {
 	NULL,
 	NULL,
+	NULL,
 };
 
 /**
@@ -19,7 +20,6 @@ global_t global = {
 int main(int argc, char **argv)
 {
 	stack_t *stack = NULL;
-	FILE *file;
 	char line[200];
 	unsigned int linenumber = 1, i, status;
 
@@ -39,25 +39,24 @@ int main(int argc, char **argv)
 	}
 
 	/* Open file */
-	file = fopen(argv[1], "r");
-	if (file == NULL)
+	global.file = fopen(argv[1], "r");
+	if (global.file == NULL)
 	{
 		fprintf(stderr, "Error: Can't open file %s\n", argv[1]);
 		exit(EXIT_FAILURE);
 	}
 
 	/* Initiate Monty program */
-	while (fgets(line, sizeof(line), file) != NULL)
+	while (fgets(line, sizeof(line), global.file) != NULL)
 	{
 		tokenize_line(line);
-		/* Perform operation */
+		/* Execute bytecode instruction */
 		for (i = 0; instruction[i].opcode != NULL; i++)
 		{
 			status = 0;
 			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
 			{
 				instruction[i].f(&stack, linenumber);
-				/* printf("%s\n", instruction[i].opcode); */
 				status = 1;
 				break;
 			}
@@ -70,8 +69,7 @@ int main(int argc, char **argv)
 		linenumber++;
 		free_cmd();
 	}
-	fclose(file);
-
+	/* File closed in cleanup() */
 	return (0);
 }
 
@@ -116,4 +114,8 @@ void tokenize_line(char *line)
 void cleanup(void)
 {
 	free_cmd();
+
+	/* Check if file is open before closing it */
+	if (global.file != NULL)
+		fclose(global.file);
 }
