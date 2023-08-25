@@ -20,8 +20,8 @@ global_t global = {
 int main(int argc, char **argv)
 {
 	stack_t *stack = NULL;
-	char line[200];
-	unsigned int linenumber = 1, i, status;
+	char fileline[200];
+	unsigned int linenum = 1, i, status;
 
 	/* Define opcode functions */
 	instruction_t instruction[] = {
@@ -47,26 +47,26 @@ int main(int argc, char **argv)
 	}
 
 	/* Initiate Monty program */
-	while (fgets(line, sizeof(line), global.file) != NULL)
+	while (fgets(fileline, sizeof(fileline), global.file) != NULL)
 	{
-		tokenize_line(line);
+		tokenize_line(fileline);
 		/* Execute bytecode instruction */
-		for (i = 0; instruction[i].opcode != NULL; i++)
+		for (i = 0; instruction[i].opcode != NULL & (global.cmd)[0] != NULL; i++)
 		{
 			status = 0;
 			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
 			{
-				instruction[i].f(&stack, linenumber);
+				instruction[i].f(&stack, linenum);
 				status = 1;
 				break;
 			}
 		}
 		if (status != 1)
 		{
-			fprintf(stderr, "L%u: unknown instruction %s\n", linenumber, (global.cmd)[0]);
+			fprintf(stderr, "L%u: unknown instruction %s\n", linenum, (global.cmd)[0]);
 			exit(EXIT_FAILURE);
 		}
-		linenumber++;
+		linenum++;
 		free_cmd();
 	}
 	/* File closed in cleanup() */
@@ -101,7 +101,6 @@ void tokenize_line(char *line)
 			exit(EXIT_FAILURE);
 		}
 		strcpy((global.cmd)[i], token);
-		printf("%s\n", (global.cmd)[i]);
 		token = strtok(NULL, delim);
 	}
 	(global.cmd)[i++] = NULL;
