@@ -20,7 +20,7 @@ int main(int argc, char **argv)
 {
 	stack_t *stack = NULL;
 	FILE *file;
-	char line[200], linecp[200];
+	char line[200];
 	unsigned int linenumber = 1, i, status;
 
 	/* Define opcode functions */
@@ -49,12 +49,11 @@ int main(int argc, char **argv)
 	/* Initiate Monty program */
 	while (fgets(line, sizeof(line), file) != NULL)
 	{
-		strcpy(linecp, line);
-		tokenize_line(linecp);
-		status = 0;
+		tokenize_line(line);
 		/* Perform operation */
 		for (i = 0; instruction[i].opcode != NULL; i++)
 		{
+			status = 0;
 			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
 			{
 				instruction[i].f(&stack, linenumber);
@@ -97,12 +96,14 @@ void tokenize_line(char *line)
 	token = strtok(line, delim);
 	for (i = 0; token != NULL && i < 2; i++)
 	{
-		(global.cmd)[i] = _strdup(token);
+		(global.cmd)[i] = malloc(sizeof(token));
 		if ((global.cmd)[i] == NULL)
 		{
 			fprintf(stderr, "Error: malloc failed\n");
 			exit(EXIT_FAILURE);
 		}
+		strcpy((global.cmd)[i], token);
+		printf("%s\n", (global.cmd)[i]);
 		token = strtok(NULL, delim);
 	}
 	(global.cmd)[i++] = NULL;

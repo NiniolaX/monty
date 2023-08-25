@@ -21,18 +21,14 @@ char *_strdup(char *str)
 
 	/* Calculate length of string given as parameter */
 	while (str[length] != '\0')
-	{
 		length++;
-	}
 
 	/* Allocate space in memory for new string */
 	new_str = malloc(1 + length * sizeof(char));
 
 	/* Return NULL if memory allocation fails */
 	if (new_str == NULL)
-	{
 		return (NULL);
-	}
 
 	/* Store copy of parameter string in new string */
 	for (i = 0; i < length; i++)
@@ -40,5 +36,4 @@ char *_strdup(char *str)
 		new_str[i] = str[i];
 	}
 	return (new_str);
-	free(new_str);
 }
