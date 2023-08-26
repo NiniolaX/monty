@@ -1,7 +1,5 @@
-#include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 #include "monty.h"
+/* Standard header files used included in monty.h */
 
 void cleanup(void);
 void tokenize_line(char *line);
@@ -51,7 +49,7 @@ int main(int argc, char **argv)
 	{
 		tokenize_line(fileline);
 		/* Execute bytecode instruction */
-		for (i = 0; instruction[i].opcode != NULL & (global.cmd)[0] != NULL; i++)
+		for (i = 0; instruction[i].opcode != NULL && (global.cmd)[0] != NULL; i++)
 		{
 			status = 0;
 			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)

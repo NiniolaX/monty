@@ -1,5 +1,6 @@
 #include "monty.h"
-#include <stdio.h>
+/* Standard header files used included in monty.h */
+
 /**
  * push - Pushes an object onto the stack
  * @stack: Address of stack
@@ -8,5 +9,44 @@
  */
 void push(stack_t **stack, unsigned int line_number)
 {
-	printf("L%u Push in push()\n", line_number);
+	stack_t *ptr, *new;
+	char *numstr = (global.cmd)[1]; /* (global.cmd)[1] is argument of push */
+
+	/* Check if address is valid */
+	if (stack == NULL)
+		return;
+
+	/* Build new stack node */
+	new = malloc(sizeof(stack_t));
+	if (new == NULL)
+	{
+		fprintf(stderr, "Error: malloc failed\n");
+		exit(EXIT_FAILURE);
+	}
+	new->prev = new->next = NULL;
+		/* Convert numstr to integer */
+	if (numstr == NULL || (atoi(numstr) == 0 && strcmp(numstr, "0") != 0))
+	{
+		fprintf(stderr, "L%u: usage: push integer\n", line_number);
+		free(new);
+		exit(EXIT_FAILURE);
+	}
+	else
+		new->n = atoi(numstr);
+
+	/* Add new node to stack */
+	if (*stack == NULL)
+	{
+		*stack = new;
+		return;
+	}
+	for (ptr = *stack; ptr != NULL; ptr = ptr->next)
+	{
+		if (ptr->next == NULL)
+		{
+			new->prev = ptr;
+			ptr->next = new;
+			return;
+		}
+	}
 }
