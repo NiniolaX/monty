@@ -10,9 +10,8 @@
 void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *ptr, *new;
-	char *numstr = (global.cmd)[1]; /* (global.cmd)[1] is argument of push */
+	char *numstr = (global.cmd)[1], *endptr;
 
-	/* Check if address is valid */
 	if (stack == NULL)
 		return;
 
@@ -24,8 +23,9 @@ void push(stack_t **stack, unsigned int line_number)
 		exit(EXIT_FAILURE);
 	}
 	new->prev = new->next = NULL;
-		/* Convert numstr to integer */
-	if (numstr == NULL || (atoi(numstr) == 0 && strcmp(numstr, "0") != 0))
+	if (numstr)
+		strtol(numstr, &endptr, 10);
+	if (numstr == NULL || (atoi(numstr) == 0 && strcmp(numstr, "0") != 0) || *endptr != '\0')
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		free(new);
