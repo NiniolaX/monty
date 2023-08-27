@@ -61,7 +61,14 @@ int main(int argc, char **argv)
 		for (i = 0; instruction[i].opcode != NULL && (global.cmd)[0] != NULL; i++)
 		{
 			status = 0;
-			if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
+			/* Handle comments */
+			if (*(global.cmd)[0] == '#')
+			{
+				nop(&stack, linenum);
+				status = 1;
+				continue;
+			}
+			else if (strcmp((global.cmd[0]), instruction[i].opcode) == 0)
 			{
 				instruction[i].f(&stack, linenum);
 				status = 1;
@@ -99,7 +106,7 @@ void tokenize_line(char *line)
 
 	/* Extract bytecode instruction from line */
 	token = strtok(line, delim);
-	for (i = 0; token != NULL && i < 2 && token[0] != '#'; i++)
+	for (i = 0; token != NULL && i < 2; i++)
 	{
 		(global.cmd)[i] = malloc(strlen(token) + 1);
 		if ((global.cmd)[i] == NULL)
