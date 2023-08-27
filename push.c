@@ -11,9 +11,7 @@ void push(stack_t **stack, unsigned int line_number)
 {
 	stack_t *ptr, *new;
 	char *numstr = (global.cmd)[1], *endptr;
-
-	if (stack == NULL)
-		return;
+	int num;
 
 	/* Build new stack node */
 	new = malloc(sizeof(stack_t));
@@ -23,16 +21,18 @@ void push(stack_t **stack, unsigned int line_number)
 		exit(EXIT_FAILURE);
 	}
 	new->prev = new->next = NULL;
+		/* Convert integer string to integer */
 	if (numstr)
-		strtol(numstr, &endptr, 10);
-	if (numstr == NULL || (atoi(numstr) == 0 && strcmp(numstr, "0") != 0) || *endptr != '\0')
+		num = (int)strtol(numstr, &endptr, 10);
+	if (numstr == NULL || (num == 0 && strcmp(numstr, "0") != 0)
+		|| *endptr != '\0')
 	{
 		fprintf(stderr, "L%u: usage: push integer\n", line_number);
 		free(new);
 		exit(EXIT_FAILURE);
 	}
 	else
-		new->n = atoi(numstr);
+		new->n = num;
 
 	/* Add new node to stack */
 	if (*stack == NULL)

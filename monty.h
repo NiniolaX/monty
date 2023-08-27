@@ -40,7 +40,6 @@ typedef struct instruction_s
  * struct global_s - program global variables
  * @cmd: bytecode commands
  * @line: command line from file
- * @head: head of stack
  *
  * Description: Global variables to be used in
  * program
@@ -48,7 +47,6 @@ typedef struct instruction_s
 typedef struct global_s
 {
 	char **cmd;
-	stack_t *head;
 	FILE *file;
 } global_t;
 

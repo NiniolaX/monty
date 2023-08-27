@@ -6,7 +6,6 @@ void tokenize_line(char *line);
 global_t global = {
 	NULL,
 	NULL,
-	NULL,
 };
 
 /**
