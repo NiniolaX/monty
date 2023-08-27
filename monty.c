@@ -24,6 +24,7 @@ int main(int argc, char **argv)
 	instruction_t instruction[] = {
 		{"push", push},
 		{"pall", pall},
+		{"pint", pint},
 		{NULL, NULL},
 	};
 	atexit(cleanup);
