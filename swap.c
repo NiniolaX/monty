@@ -26,10 +26,13 @@ void swap(stack_t **stack, unsigned int line_number)
 		{
 			TOS = ptr;
 			TOS1 = ptr->prev;
-			(TOS1->prev)->next = TOS;
+			/* Link TOS with node before TOS1 */
+			if (TOS1->prev != NULL)
+				(TOS->prev)->next = TOS;
 			TOS->prev = TOS1->prev;
-			TOS1->prev = TOS;
+			/* Link TOS1 with TOS */
 			TOS->next = TOS1;
+			TOS1->prev = TOS;
 			TOS1->next = NULL;
 			return;
 		}
