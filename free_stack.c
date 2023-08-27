@@ -6,10 +6,10 @@
  */
 void free_stack(void)
 {
-	stack_t *temp;
+	stack_t *temp = NULL;
 
 	/* Check if stack is empty */
-	if (*(global.head) == NULL)
+	if (*(global.head) == NULL) /* global.head is address of stack's head node */
 		return;
 
 	/* Free stack */
@@ -19,4 +19,5 @@ void free_stack(void)
 		free(*(global.head));
 		*(global.head) = temp;
 	}
+	*(global.head) = NULL;
 }

@@ -9,7 +9,7 @@
  */
 void push(stack_t **stack, unsigned int line_number)
 {
-	stack_t *ptr, *new;
+	stack_t *ptr = NULL, *new = NULL;
 	char *numstr = (global.cmd)[1], *endptr;
 	int num;
 

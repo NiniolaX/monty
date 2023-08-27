@@ -2,19 +2,18 @@
 /* Standard header files used included in monty.h */
 
 /**
- * pint - Prints the value at the top of the stack
+ * pop - Removes the top element of the stack
  * @stack: Address of stack
  * @line_number: Line number of bytecode instruction
  * Return: void
  */
-void pint(stack_t **stack, unsigned int line_number)
+void pop(stack_t **stack, unsigned int line_number)
 {
 	stack_t *ptr = NULL;
 
-	/* Check if stack is empty */
 	if (*stack == NULL)
 	{
-		fprintf(stderr, "L%u: can't pint, stack empty\n", line_number);
+		fprintf(stderr, "L%u: can't pop an empty stack\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
@@ -22,7 +21,11 @@ void pint(stack_t **stack, unsigned int line_number)
 	{
 		if (ptr->next == NULL)
 		{
-			printf("%d\n", ptr->n);
+			if (ptr->prev != NULL)
+				(ptr->prev)->next = ptr->next; /* ptr->next is NULL */
+			else
+				*stack = ptr->next;
+			free(ptr);
 			return;
 		}
 	}
