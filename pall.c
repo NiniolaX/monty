@@ -13,11 +13,7 @@ void pall(stack_t **stack, __attribute__((unused))unsigned int line_number)
 
 	/* Check if stack is empty */
 	if (*stack == NULL)
-	{
-		/* Testing if push worked */
-		printf("Stack is empty\n");
 		return;
-	}
 	ptr = *stack;
 
 	/* Traverse to top of stack */
