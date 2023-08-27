@@ -99,7 +99,7 @@ void tokenize_line(char *line)
 
 	/* Extract bytecode instruction from line */
 	token = strtok(line, delim);
-	for (i = 0; token != NULL && i < 2; i++)
+	for (i = 0; token != NULL && i < 2 && token[0] != '#'; i++)
 	{
 		(global.cmd)[i] = malloc(strlen(token) + 1);
 		if ((global.cmd)[i] == NULL)
