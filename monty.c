@@ -6,6 +6,7 @@ void tokenize_line(char *line);
 global_t global = {
 	NULL,
 	NULL,
+	NULL,
 };
 
 /**
@@ -19,7 +20,6 @@ int main(int argc, char **argv)
 	stack_t *stack = NULL;
 	char fileline[200];
 	unsigned int linenum = 1, i, status;
-
 	/* Define opcode functions */
 	instruction_t instruction[] = {
 		{"push", push},
@@ -27,8 +27,9 @@ int main(int argc, char **argv)
 		{"pint", pint},
 		{NULL, NULL},
 	};
-	atexit(cleanup);
 
+	atexit(cleanup);
+	global.head = &stack;
 	/* Check number of arguments to program */
 	if (argc != 2)
 	{
@@ -111,6 +112,7 @@ void tokenize_line(char *line)
 void cleanup(void)
 {
 	free_cmd();
+	free_stack();
 
 	/* Check if file is open before closing it */
 	if (global.file != NULL)

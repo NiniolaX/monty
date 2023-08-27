@@ -48,6 +48,7 @@ typedef struct global_s
 {
 	char **cmd;
 	FILE *file;
+	stack_t **head;
 } global_t;
 
 extern global_t global;
@@ -62,5 +63,6 @@ void nop(stack_t **stack, unsigned int line_number);
 void cleanup(void);
 void free_cmd(void);
 void tokenize_line(char *line);
+void free_stack(void);
 
 #endif
