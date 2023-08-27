@@ -95,7 +95,7 @@ void tokenize_line(char *line)
 	token = strtok(line, delim);
 	for (i = 0; token != NULL && i < 2; i++)
 	{
-		(global.cmd)[i] = malloc(sizeof(token));
+		(global.cmd)[i] = malloc(strlen(token) + 1);
 		if ((global.cmd)[i] == NULL)
 		{
 			fprintf(stderr, "Error: malloc failed\n");

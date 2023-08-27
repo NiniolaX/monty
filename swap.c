@@ -28,7 +28,9 @@ void swap(stack_t **stack, unsigned int line_number)
 			TOS1 = ptr->prev;
 			/* Link TOS with node before TOS1 */
 			if (TOS1->prev != NULL)
-				(TOS->prev)->next = TOS;
+				(TOS1->prev)->next = TOS;
+			else
+				*stack = TOS;
 			TOS->prev = TOS1->prev;
 			/* Link TOS1 with TOS */
 			TOS->next = TOS1;
