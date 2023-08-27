@@ -64,5 +64,6 @@ void cleanup(void);
 void free_cmd(void);
 void tokenize_line(char *line);
 void free_stack(void);
+size_t stack_size(stack_t **stack);
 
 #endif
