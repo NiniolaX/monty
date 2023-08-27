@@ -3,7 +3,7 @@
 
 size_t stack_size(stack_t **stack);
 /**
- * div - Divides the second top element of the stack by the top element of
+ * _div - Divides the second top element of the stack by the top element of
  *	the stack
  * @stack: Address of stack
  * @line_number: Line number of bytecode instruction

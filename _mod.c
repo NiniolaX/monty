@@ -3,21 +3,21 @@
 
 size_t stack_size(stack_t **stack);
 /**
- * _mul - Multiplies the second top element of the stack by the top element of
- *	the stack
+ * _mod - Computes the result of the division of the second top element of
+ *	the stack by the top element of the stack
  * @stack: Address of stack
  * @line_number: Line number of bytecode instruction
  * Return: void
  */
-void _mul(stack_t **stack, unsigned int line_number)
+void _mod(stack_t **stack, unsigned int line_number)
 {
 	stack_t *ptr, *TOS, *TOS1;
-	int product;
+	int res;
 
 	/* Check that stack contains more than two elements */
 	if (stack_size(stack) < 2)
 	{
-		fprintf(stderr, "L%u: can't mul, stack too short\n", line_number);
+		fprintf(stderr, "L%u: can't mod, stack too short\n", line_number);
 		exit(EXIT_FAILURE);
 	}
 
@@ -28,9 +28,14 @@ void _mul(stack_t **stack, unsigned int line_number)
 		{
 			TOS = ptr;
 			TOS1 = ptr->prev;
-			product = TOS1->n * TOS->n;
+			if (TOS->n == 0)
+			{
+				fprintf(stderr, "L%u: division by zero\n", line_number);
+				exit(EXIT_FAILURE);
+			}
+			res = TOS1->n % TOS->n;
 			free(TOS);
-			TOS1->n = product;
+			TOS1->n = res;
 			TOS1->next = NULL;
 			return;
 		}
